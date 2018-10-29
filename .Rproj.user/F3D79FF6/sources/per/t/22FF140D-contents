@@ -1,0 +1,99 @@
+---
+title: "3. Manipulating Vectors and Matrices"
+author: "James Woodcock"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+There are a number of helpful functions that allow us to manipulate and transform vector object, some useful techniques and functions are demonstrated below.
+
+# Subset
+
+The subset function takes a vector or matrix, and returns a vector or matrix with the values of the original variable that meet the criteria you define.
+
+```{r collapse = TRUE}
+# Define a vector.
+x <- c(1,2,3,4,5,6,7,8,9,10,11,12)
+
+subset(x, x > 8) # Return values in x bigger than 8.
+
+subset(x, x <= 2)
+
+subset(x, x != 5) # Not equal to 5.
+
+subset(x, x %in% c(1,2,3)) # Keep elements of x in c(1,2,3)
+
+```
+
+# Which
+
+The <tt>which()</tt> function behaves in a similar way to <tt>subset()</tt>, however instead of returning the actual elements of the vector, it returns the **positions** of the elements which meet the criteria you set.
+```{r}
+x <- c(3,6,9,12,15,18)
+
+which(x < 10)
+```
+We can see that we have obtained the positions in the original vector of elements less than 10.
+
+# Sorting
+
+It is also useful to be able to sort vectors by value.
+
+```{r collapse=TRUE}
+x <- runif(10)
+
+sort(x, decreasing = TRUE)
+
+y <- c("01 File.pdf", "1.2 File.pdf", "Very Important Document.pdf")
+
+sort(y)
+```
+
+# Sequence Function
+
+We can define a sequence in R easily using the following code. Sequences are useful when we want a fixed step size between two values, this can be particularly useful inside a "for" loop.
+
+```{r collapse = TRUE}
+x <- seq(from = 1, to = 10, by = 1)
+x
+y = seq(0, 1, 0.01)
+print(y[1:10])
+```
+
+# Missing Value Treatment
+
+There are a number of ways we can manipulate missing values inside vectors, either by deleting them, or changing their value.
+
+```{r}
+x <- c(1,6,2,6,NA,NA,2,5)
+
+na.omit(x) # Remove the NA's from the vector.
+```
+
+We can also use the <tt>is.na()</tt> to return a logical vector which is true when the value is NA, and false when it is not. We can use this to assign values to the elements of a vector which are missing.
+
+```{r collapse=TRUE}
+is.na(x)
+
+x[is.na(x)] <- mean(x[!is.na(x)]) # Assign missings to the mean of the vector.
+x
+
+```
+
+Notice above when we calculate the mean of this vector we have to exclude the missing values in the calculation. This is because NA values are known as **contagious**, meaning that calculations involving NA's will return NA. For example:
+
+```{r}
+1 + 2 + 3 + 4 + NA
+```
+
+
+
+# Further Reading
+
+More information [here.](https://datascienceplus.com/how-to-manipulate-the-vectors/)

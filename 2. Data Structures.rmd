@@ -1,0 +1,235 @@
+---
+title: "2. Data Structures"
+author: "James Woodcock"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r setup, include=FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction 
+
+R has a number of different internal datatypes which can be used to store varying pieces of data. In SAS we only need to worry about whether a variable is a numeric or character type, but here we have plenty more. This makes R (and almost all other languages) more complex than SAS, but also offers much more flexibility.
+
+Data is stored in the form of variables, which just give a name to a piece of data so that we can use it later. A variable could be a number, character, list, dataset, or any number of other things. You could even assign a list of lists to a variable, which can be very helpful when you start to write more complex functions.
+
+# Variables
+
+We can assign a value to a **variable**, and then print its value in the console, like below.
+```{r}
+x <- 1
+print(x)
+```
+
+Notice that the assignment operator is "<-", and not "=" like in many other languages. Technically you could use "=" and it would do the same thing, however not always, and the difference is very subtle.
+We can also manipulate variables, adding them together or multiplying them.
+
+```{r}
+x <- 1 # Integer
+y <- 2.3 # Floating point ("double")
+z <- pi 
+print(x + y + z)
+```
+
+# Common Data Types
+
+## Vectors
+
+Vectors are simply a sequence of elements, where each entry is usually of the same data type. They can be declared using the <tt>c()</tt> function.
+
+```{r collapse=TRUE}
+numVec <- c(1,2,3,4,5) # Declares a vector with 5 elements.
+charVec <- c("Hello", "world.")
+numVec
+charVec
+```
+
+Elements of a vector can be accessed via square brackets after the variable name holding the vector. Note that vector indexes start from 1.
+
+```{r collapse=TRUE}
+numVec[1]
+charVec[2]
+numVec[2:4] # Select elements 2 to 4, inclusive!
+```
+We can also give names to the elements of a vector, and then reference the entries using this name. A possible use case for this: Say you want to store the median of each column in a dataset, the natural way to store these values would be in a vector, however you don't want to remember the position of each variable in order to use it later on. In this situation, a named vector would be useful as you could collect the mean of any variable from the vector you created using it's name.
+```{r collapse=TRUE}
+means <- c(0.002, 5.3, 3209.45, 35.88, 0.74)
+names(means) <- c("DEFAULTS", "YEARS_ON_BOOK", "LIMIT", "AGE", "UTIL")
+print(means)
+means["DEFAULTS"] # We can now reference by the column name.
+```
+Notice how the value we supply to <tt>names(means)</tt> is also a vector. R is a language built on vectors, so generally using them is the most efficient way to do things.
+
+Vectors can also be concatenated with the <tt>c()</tt> function, with the following syntax.
+```{r}
+x <- c(1,2,3)
+y <- c(4,5,6)
+z <- c(x,y,c(7,8,9)) # We can nest c() statements inside a c() statement to
+                     # join vectors.
+z
+```
+
+We can also perform **element-wise calculations** on vectors using normal mathematical notations. This is also works in the same way for matrices, which we will come onto next.
+
+```{r collapse=TRUE}
+x <- c(1,2,3)
+y <- c(2,3,4)
+
+2 * x * y # Multiplication
+x^2 # Squares each element of x
+x/y # Divides the element in x with the corresponding y element.
+log(x) # Logarithm
+exp(y)
+
+```
+
+## Matrices
+
+### Creating a Matrix
+We can think of matrices in basically the same way as vectors, apart from they have two dimensions rather than one. With matrices, we can start to see how real datasets can be stored in R. Creating matrices can be done in three different ways:
+```{r collapse=TRUE}
+matrixA <- rbind(c(1,2,3),c(4,5,6)) # Build by rows.
+matrixA
+
+matrixB <- cbind(c(1,2,3),c(4,5,6)) # Build by columns. 
+matrixB
+
+matrixC <- matrix(c(1,2,3,4,5,6), nrow = 2) # Internal representation, rarely used.
+matrixC
+```
+The first two methods are the most common, and easiest, ways to create a matrix. <tt>rbind()</tt> works by stacking rows up, given each row as a vector. In the opposite way, <tt>cbind</tt> stacks columns next to each other. So if we wanted to add a row to a matrix, we could use <tt>rbind</tt>, and if we wanted to add a row, use <tt>cbind</tt>.
+
+```{r collapse = TRUE}
+A = cbind(c(1,2),c(3,4))
+rbind(A, c(10,11)) # Add a row
+cbind(A, c(7,8)) # Add a column
+```
+
+### Referencing Elements
+We can reference entries (as well as change them) in much the same way as with vectors, but now we need a row and column reference. For example, to change the 3rd row, 2nd column entry we could write:
+```{r,eval = FALSE, include = TRUE}
+A[3,2] <- 2 # Reference is [ROW, COLUMN]
+```
+
+We can also select entire rows and columns of a matrix by leaving the reference blank inside the square brackets.
+```{r collapse=TRUE}
+A = diag(c(1,2,3,4,5,6))
+A
+A[,2] # Returns the second column of A.
+A[4,] # Return the fourth row.
+A[1:3,4] # Gives rows 1:3 of column 4.
+```
+
+Notice that <tt>A[,2]</tt> returns what looks like a row vector, when in usual maths it would be a column vector. This is because R has no differentiation between row and column vectors.
+
+### Calculations with Matrices
+
+Like vectors, we can perform **element-wise** calculations on matrices of the same dimensions.
+
+```{r collapse=TRUE}
+A <- rbind(c(1,2), c(3,4))
+A
+B <- rbind(c(2,2), c(3,3))
+B
+
+A + B
+
+A * B # Note that this is NOT matrix multiplication.
+
+A ^ B
+
+A / B
+```
+
+Note that the \* operator does not mean matrix multiplication here. Instead we need to use the following syntax.
+
+```{r collapse = TRUE}
+A <- matrix(runif(16), ncol = 4)
+A
+
+B <- matrix(runif(16), ncol = 4)
+B
+
+A %*% B # Is the matrix multiplication of A and B.
+```
+
+## Lists
+
+Lists are sort of like a vector, but each entry is named, and can contain any type of data that you choose. Lists are very powerful in R, and make the building blocks of the Object Oriented environment within R. The easiest way to explain lists is by demonstration.
+
+```{r}
+BasicList <- list(Name = c("James", "Sam", "Jed", "Adam", "Eve"),
+             Age = c(23, 20, 39, 40, 13),
+             FavouriteFood = c("Lasange","Monkey Nuts","Pizza", "Calzones", "Bread"))
+
+BasicList
+
+```
+We can see from the output above that the variable <tt>BasicList</tt> has three sets of output, one for each of the elements that we have defined, which in this case are all vectors. We can access the elements of the list like so.
+
+```{r collapse=TRUE}
+BasicList$Name # Use $ followed by the element name.
+
+BasicList$Age[3] # We can then get the vector values like usual.
+
+BasicList["FavouriteFood"] # Can also reference by name.
+
+BasicList[2] # Or by list position.
+```
+We don't actually have to name our list elements, but in practice this is useful. If we don't have names for the elements, you can reference them numerically like in the last example above.
+
+Lists don't just have to contain vectors. Take the following example:
+
+```{r}
+data <- c(1,2,3,4,5,6,7,8,9,10)
+response <- c(4,6,8,10,12,14,16,18,20,22)
+dataSet <- data.frame(X = data, Y =response)
+linearModel <- lm(data = dataSet, formula = Y ~ X)
+str(linearModel)
+```
+Here we can see that the <tt>linearModel</tt> object <tt>lm</tt> is actually just a list (although it has a class). The list making up the linear model contains many different types of data, and even lists of lists.
+
+# Useful Functions
+
+Below are a list of useful functions in R that do useful calculations.
+
+```{r collapse=TRUE}
+vec <- c(1,2,3,4,5)
+mat <- cbind(c(1,2,3),c(4,5,9),c(9,2,4))
+list <- list(X = c(1,2,3), Y = c(4,5,6))
+
+is.list(vec) # Checks the type of a variable. Returns TRUE / FALSE
+
+is.list(list)
+
+sum(vec) # Sums the elements of a vector or matrix.
+
+var(mat) # Gives the covariance matrix, or the variance for a vector. 
+
+sd(mat) # Gives the standard deviation of all the elements of vectors or matrices.
+
+length(vec) # Gives the length of the vector. Gives the number of columns of a matrix.
+            # Also gives the number of entries in a list.
+
+nrow(mat) # Returns the number of columns in a matrix.
+
+solve(mat) # Gives the inverse of a square matrix.
+
+quantile(vec, c(0.25)) #  Gives the first quartile.
+
+```
+
+Many more useful functions can be found [here.](https://cran.r-project.org/doc/contrib/Short-refcard.pdf)
+
+
+
+
+
+
+
+
+

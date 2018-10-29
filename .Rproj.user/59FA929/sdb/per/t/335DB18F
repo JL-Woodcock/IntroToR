@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"5. Manipulating DataFrames with Dplyr\"\nauthor: \"James Woodcock\"\noutput: \n    html_document:\n        toc: true\n        number_sections: true\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n# Introduction\n\nThe package <tt>dplyr</tt> provides a selection of functions which extend and simplify the way that the \"Base R\" language deals with dataset manipulation. There are a number of \"verbs\" in <tt>dplyr</tt> that deal with common tasks when wrangling data.\n\nTo install and load <tt>dplyr</tt>, run the following code.\n\n```{r,eval = FALSE, include = TRUE}\ninstall.packages(\"dplyr\")\n```\n```{r, eval = TRUE, include = TRUE, echo = FALSE}\nlibrary(dplyr)\n```\n\n# Select\n\nThe <tt>select()</tt> verb selects columns in a dataset.\n\n```{r collapse=TRUE}\n\ndata <- data.frame(\n    ID = seq(1,10,1),\n    V1 = runif(10),\n    V2 = runif(10),\n    V3 = runif(10)\n)\n\ndata\n\n# Keep a selection of variables.\ndataSubset <- data %>%\n    select(ID, V2)\n\ndataSubset\n\n# Drop everything that starts with a V.\ndataSubset <- data %>%\n    select(-starts_with(\"V\"))\n\ndataSubset\n\n# Move V3 to the start.\ndataSubset <- data %>%\n    select(V3, everything())\n\ndataSubset\n```\n\n\n",
+    "created" : 1538478755959.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3572685280",
+    "id" : "335DB18F",
+    "lastKnownWriteTime" : 1538478760,
+    "last_content_update" : -2147483648,
+    "path" : "C:/Users/JamesWoodcock/Google Drive/Training and Information/Training Sessions/Lunchtime R/5. Manipulating Dataframes With Dplyr.rmd",
+    "project_path" : "5. Manipulating Dataframes With Dplyr.rmd",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

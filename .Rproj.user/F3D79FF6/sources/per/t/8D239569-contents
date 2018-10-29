@@ -1,0 +1,139 @@
+---
+title: "4. Data Frames"
+author: "James Woodcock"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Frames
+
+Data Frames are the most common way to handle a "dataset" in R. Internally they are very similar to lists, and use the same syntax to access columns, however some matrix syntax can also be used to access individual elements of a dataframe.
+
+```{r collapse = TRUE}
+# Creating a data frame.
+
+dataset <- data.frame(
+    AccNum = c(1,2,3,4,5),
+    Status = c("UTD", "UTD", "DEF", "DEL", "UTD"),
+    Balance = c(203.2, 1003.39, 2819.43, 4029.19, 503.71)
+)
+
+head(dataset) # A useful function to see the top of a dataset.
+```
+
+You can obtain rows/columns and specific entries of data frame using similar syntax as we saw for matrices and lists. In the background, a data frame is actually a (named) list of vectors containing the data.
+
+```{r collapse=TRUE}
+dataset$AccNum # Select the AccNum column.
+
+dataset[,"Balance"] # Select the Balance column.
+
+dataset[1:3,] # Select the first three rows of the dataset.
+```
+
+# Creating New Columns
+
+We can easily create new columns in dataframes using the "$" syntax, such as in the examples below. In a later section we will revisit this using a package called <tt>dplyr</tt> which provides a nicer syntax to achieve the same results.
+
+```{r collapse = TRUE}
+# Consider the following simple data frame.
+data <- data.frame(
+    ID = seq(1,10,1),
+    V1 = runif(10),
+    V2 = rnorm(10),
+    V3 = 2 * rnorm(10)
+)
+data
+
+# We will now add a column which is equal to the sum of V1, V2, and V3.
+data$sum <- data$V1 + data$V2 + data$V3
+data
+
+# And now a column with the average of V3.
+data$v3Avg <- mean(data$V3)
+data
+```
+Notice how when we added the column with the sums of the three variables, we didn't use the <tt>sum()</tt> function. This is because <tt>sum()</tt> sums all of the elements of each matrix, it doesn't do element-wise vector addition. We'll come on to ways to simplify this in the next section, where we don't have to type out each variable to be summed.
+
+# Sorting Data Frames
+
+We can sort dataframes easily, although the process is slightly different than for vectors, which has a convenient <tt>sort()</tt> function. The following syntax can be used.
+
+```{r collapse=TRUE}
+# Add a column to the dataframe for demonstration purposes.
+
+data$Group <- c(1,1,2,2,3,3,4,4,5,5)
+data
+
+# Sort by V1
+data[with(data,order(V1)),]
+
+# Sort by descending group then by V3.
+data[with(data, order(-Group, V3)),]
+```
+
+You may think this isn't the most elegant way to go about this, and you'd be right. Again, <tt>dplyr</tt> has a much more intuitive solution which we will discuss later.
+
+# Subsetting
+
+Subsetting based on logical conditions is achieved by using the following.
+
+```{r collapse = TRUE}
+subset(data, V3 < 0)
+
+# AND condition.
+subset(data, (V3 < 0) & (Group == 1))
+
+# OR condition.
+subset(data, (Group == 1) | (Group == 4))
+```
+
+Again, subsetting is covered in the <tt>dplyr</tt> section too.
+
+# Dropping Columns
+
+There a couple of different ways that you can drop columns in R.
+
+```{r collapse = TRUE}
+
+# 1. Set the column to NULL.
+data$V3 <- NULL
+data
+
+# 2. Drop multiple by name.
+drop <- c("Group", "V2")
+data[,!names(data) %in% drop]
+
+```
+
+# Reading A CSV File
+
+It is very simple to import data from a CSV file into a data frame. We will use the <tt>read.csv()</tt> function here, however the more general <tt>read.file()</tt> would also work (with extra configuration).
+
+When working with external files, it is useful to set a working directory, this way we don't have to set a full filepath every time we want to read or write a file. The easiest way to do this is to save your script in a location, and then in RStudio, select Session -> Set Working Directory -> To Source File Location. This means that we can refer to other files in the folder by just their name, and not the full path. You can also get the current location of your working directory with the <tt>getwd()</tt> function.
+
+```{r}
+# Read the "cars" CSV file and put it into a dataframe.
+car <- read.csv("cars.csv") # Remember the file extension!
+head(car)
+
+# If the data is contained in a subdirectory of your working directory.
+car <- read.csv("Data/cars.csv")
+```
+
+We can also write CSV files from data frames in a similar way.
+```{r}
+write.csv(car, "Data/CarsCopy.csv")
+```
+
+# Further Reading
+
+DataCamp guide to DataFrames [here.](https://www.datacamp.com/community/tutorials/15-easy-solutions-data-frame-problems-r)
+
+Another good guide [here.](https://egret.psychol.cam.ac.uk/statistics/R/enteringdata.html)

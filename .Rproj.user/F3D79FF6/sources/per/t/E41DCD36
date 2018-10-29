@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1538426234553.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "986599376",
+    "id" : "E41DCD36",
+    "lastKnownWriteTime" : 1539183702,
+    "last_content_update" : 1539183702798,
+    "path" : "C:/Users/jlwoo/Google Drive/Training and Information/Training Sessions/Lunchtime R/5. Manipulating Dataframes With Dplyr.rmd",
+    "project_path" : "5. Manipulating Dataframes With Dplyr.rmd",
+    "properties" : {
+        "cursorPosition" : "65,45",
+        "last_setup_crc32" : "FE6D98FAbb338d19",
+        "scrollLine" : "53",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,78 @@
+---
+title: "5. Manipulating DataFrames with Dplyr"
+author: "James Woodcock"
+output: 
+    html_document:
+        toc: true
+        number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Introduction
+
+The package <tt>dplyr</tt> provides a selection of functions which extend and simplify the way that the "Base R" language deals with dataset manipulation. There are a number of "verbs" in <tt>dplyr</tt> that deal with common tasks when wrangling data.
+
+To install and load <tt>dplyr</tt>, run the following code.
+
+```{r,eval = FALSE, include = TRUE}
+install.packages("dplyr")
+```
+```{r, eval = TRUE, include = TRUE, echo = FALSE}
+library(dplyr)
+```
+
+# The Pipe Operator
+
+An important additional piece of syntax is introduced by <tt>dplyr</tt> is the pipe operator <tt>%>%</tt>. The pipe operator simply "pipes" through the expression of the left to the first argument of the function on the right. This means we can write cleaner code when we want to run multiple functions, rather than nesting them. The <tt>%>%</tt> is best demonstrated in the two following equivalent examples.
+
+# Select
+
+The <tt>select()</tt> verb selects columns in a dataset.
+
+```{r collapse=TRUE}
+
+data <- data.frame(
+    ID = seq(1,10,1),
+    V1 = runif(10),
+    V2 = runif(10),
+    V3 = runif(10)
+)
+
+data
+
+# Keep a selection of variables.
+dataSubset <- data %>%
+    select(ID, V2)
+
+dataSubset
+
+# Drop everything that starts with a V.
+dataSubset <- data %>%
+    select(-starts_with("V"))
+
+dataSubset
+
+# Move V3 to the start.
+dataSubset <- data %>%
+    select(V3, everything())
+
+dataSubset
+```
+
+# Filter
+
+The <tt>filter()</tt> verb gives a cleaner interface for conditionally subsetting data.
+```{r}
+dataFiltered <- data %>%
+    filter(V2 < 0.2)
+
+dataFiltered
+```
+
+
+
+
+
+
